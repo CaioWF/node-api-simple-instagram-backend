@@ -1,4 +1,7 @@
 /* eslint-disable class-methods-use-this */
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 const Post = require('../models/Post');
 
 class PostController {
@@ -13,9 +16,23 @@ class PostController {
     } = request.body;
     const { filename: image } = request.file;
 
+    const [name] = image.split('.');
+    const fileName = `${name}.jpg`;
+
+    await sharp(request.file.path)
+      .resize(500)
+      .jpeg({ quality: 70 })
+      .toFile(
+        path.resolve(request.file.destination, 'resized', fileName),
+      );
+
+    fs.unlinkSync(request.file.path);
+
     const post = await Post.create({
-      author, place, description, hashtags, image,
+      author, place, description, hashtags, fileName,
     });
+
+    request.io.emit('post', post);
 
     return response.json(post);
   }
