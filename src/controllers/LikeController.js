@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 const Post = require('../models/Post');
 
-class PostController {
+class LikeController {
   async store(request, response) {
     const post = await Post.findById(request.params.id);
 
@@ -13,4 +13,4 @@ class PostController {
   }
 }
 
-module.exports = new PostController();
+module.exports = new LikeController();
