@@ -29,7 +29,7 @@ class PostController {
     fs.unlinkSync(request.file.path);
 
     const post = await Post.create({
-      author, place, description, hashtags, fileName,
+      author, place, description, hashtags, image: fileName,
     });
 
     request.io.emit('post', post);
